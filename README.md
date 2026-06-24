@@ -4,13 +4,13 @@
 
 <p>
   <strong>HumanDetection AI</strong><br>
-  Deteksi manusia realtime, tracking otomatis, hitung jumlah orang, status gerak, dan dashboard monitoring modern.
+  Aplikasi deteksi manusia realtime dengan tracking otomatis, hitung jumlah orang, status gerak, dan dashboard monitoring modern.
 </p>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/YOLOv8-Human%20Detection-111827?style=for-the-badge&logo=github&logoColor=white" alt="YOLOv8">
-  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Termux-0F172A?style=for-the-badge&logo=android&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/badge/Platform-PC%20%7C%20Termux-0F172A?style=for-the-badge&logo=android&logoColor=white" alt="Platform">
   <img src="https://img.shields.io/badge/Mode-CLI%20%2B%20Live%20Camera-7C3AED?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="CLI">
 </p>
 
@@ -18,24 +18,47 @@
 
 ---
 
-## Tentang Project
+## Ringkasan
 
-`HumanDetect` adalah aplikasi Python untuk mendeteksi manusia secara realtime menggunakan kamera.  
-Aplikasi ini dirancang agar:
+`HumanDetect` adalah aplikasi Python untuk mendeteksi manusia dari kamera secara realtime.  
+Aplikasi ini dibuat agar mudah dijalankan, mudah dipahami, dan bisa dipakai baik di:
 
-- ringan dan mudah dijalankan
-- punya tampilan live monitoring yang rapi
-- menghitung jumlah orang aktif dan total orang unik otomatis
-- mendeteksi status pergerakan manusia
-- bisa dijalankan di PC dan juga mode headless seperti Termux
+- PC / laptop
+- server / headless mode
+- Termux Android
+
+Fungsi utama aplikasi:
+
+- mendeteksi manusia dari kamera
+- memberi `ID` unik per orang
+- menghitung jumlah orang aktif
+- menghitung total orang unik selama sesi
+- menandai status gerak seperti `Dipantau`, `Aktif`, dan `Bergerak`
+- menampilkan dashboard monitoring yang rapi
 
 Project ini cocok untuk:
 
 - monitoring ruangan
-- prototipe CCTV AI
+- eksperimen CCTV AI
+- sistem hitung orang
 - analisis okupansi
-- sistem hitung orang realtime
-- eksperimen computer vision berbasis YOLOv8
+- pembelajaran computer vision berbasis YOLOv8
+
+---
+
+## Daftar Isi
+
+- [Fitur Utama](#fitur-utama)
+- [Struktur Project](#struktur-project)
+- [Cara Kerja Singkat](#cara-kerja-singkat)
+- [Instalasi di PC](#instalasi-di-pc)
+- [Instalasi di Termux Android](#instalasi-di-termux-android)
+- [Cara Menjalankan Aplikasi](#cara-menjalankan-aplikasi)
+- [Penjelasan Backend](#penjelasan-backend)
+- [Opsi CLI Penting](#opsi-cli-penting)
+- [Tampilan Monitoring](#tampilan-monitoring)
+- [Contoh Output Terminal](#contoh-output-terminal)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -44,20 +67,23 @@ Project ini cocok untuk:
 - Deteksi manusia realtime dari kamera
 - Tracking otomatis per orang dengan `ID`
 - Hitung `orang aktif`, `total terdeteksi`, dan `puncak okupansi`
-- Status gerak per orang: `Dipantau`, `Aktif`, `Bergerak`
-- Dashboard modern langsung di tampilan kamera
-- Info `FPS` dan `uptime` sesi
-- Bisa simpan hasil video anotasi ke file `.mp4`
+- Status pergerakan manusia:
+  - `Dipantau`
+  - `Aktif`
+  - `Bergerak`
+- Dashboard live yang modern dan rapi
+- Informasi `FPS` dan `uptime`
+- Bisa menyimpan hasil video anotasi ke file `.mp4`
 - Bisa dijalankan dengan backend:
   - `ultralytics`
   - `onnx`
   - `tflite`
-- Support mode singkat:
+- Punya launcher singkat:
   - `python human.py`
 
 ---
 
-## Struktur File
+## Struktur Project
 
 ```text
 HumanDetect/
@@ -67,13 +93,44 @@ HumanDetect/
 └─ README.md
 ```
 
-- `human.py` = launcher singkat
-- `human_detect_cli.py` = aplikasi utama
-- `yolov8n.pt` = model YOLOv8n default
+Penjelasan file:
+
+- `human.py`
+  - launcher singkat
+  - file ini yang paling disarankan untuk dijalankan
+- `human_detect_cli.py`
+  - file utama aplikasi
+  - berisi deteksi, tracking, dashboard, dan semua logika inti
+- `yolov8n.pt`
+  - model default untuk backend `ultralytics`
+- `README.md`
+  - panduan penggunaan project
 
 ---
 
-## Quick Start
+## Cara Kerja Singkat
+
+Secara sederhana, aplikasi bekerja seperti ini:
+
+1. Kamera menangkap frame video
+2. Model YOLO mendeteksi objek manusia
+3. Sistem tracking memberi `ID` per orang
+4. Aplikasi menghitung:
+   - berapa orang yang sedang terlihat
+   - berapa total orang unik yang pernah muncul
+   - status gerak tiap orang
+5. Dashboard ditampilkan ke layar atau ke terminal
+
+Kalau kamu hanya ingin langsung pakai, cukup fokus ke bagian:
+
+- instalasi
+- jalankan `python human.py`
+
+---
+
+## Instalasi di PC
+
+Bagian ini untuk Windows / Linux / laptop / desktop.
 
 ### 1. Clone Repository
 
@@ -82,27 +139,45 @@ git clone https://github.com/floryid/HumanDetect.git
 cd HumanDetect
 ```
 
-### 2. Install Dependensi
+### 2. Pastikan Python Sudah Terpasang
 
-Untuk penggunaan PC dengan backend `ultralytics`:
+Cek versi Python:
+
+```bash
+python --version
+```
+
+Disarankan:
+
+- Python `3.10` atau lebih baru
+
+### 3. Install Dependensi
+
+#### Opsi termudah untuk PC: backend Ultralytics
 
 ```bash
 pip install numpy pillow opencv-python ultralytics lap
 ```
 
-Jika ingin backend `onnx`:
+Ini adalah pilihan terbaik jika:
+
+- kamu menjalankan di PC
+- ingin setup paling cepat
+- ingin pakai file model `yolov8n.pt` yang sudah ada di repo
+
+#### Jika ingin backend ONNX
 
 ```bash
 pip install numpy pillow opencv-python onnxruntime
 ```
 
-Jika ingin backend `tflite`:
+#### Jika ingin backend TFLite
 
 ```bash
 pip install numpy pillow opencv-python tflite-runtime
 ```
 
-### 3. Jalankan Aplikasi
+### 4. Jalankan Aplikasi
 
 Perintah paling singkat:
 
@@ -110,7 +185,7 @@ Perintah paling singkat:
 python human.py
 ```
 
-Atau langsung file utama:
+Kalau ingin langsung file utama:
 
 ```bash
 python human_detect_cli.py
@@ -118,57 +193,190 @@ python human_detect_cli.py
 
 ---
 
-## Cara Penggunaan
+## Instalasi di Termux Android
 
-### Jalankan Normal
+Bagian ini untuk Android menggunakan Termux.
+
+### Penting Sebelum Mulai
+
+Di Termux, backend yang paling disarankan adalah:
+
+- `onnx`
+- `tflite`
+
+Backend `ultralytics` lebih cocok untuk PC karena biasanya lebih mudah dan lebih stabil di sana.
+
+### 1. Install Package Dasar
+
+```bash
+pkg update
+pkg install python termux-api
+```
+
+### 2. Install Dependensi Python
+
+#### Untuk ONNX
+
+```bash
+pip install numpy pillow onnxruntime
+```
+
+#### Untuk TFLite
+
+```bash
+pip install numpy pillow tflite-runtime
+```
+
+### 3. Siapkan Model
+
+Jika kamu memakai Termux, model yang lebih cocok:
+
+- `yolov8n.onnx`
+- atau `yolov8n.tflite`
+
+Catatan:
+
+- file default di repo sekarang adalah `yolov8n.pt`
+- untuk Termux, biasanya kamu perlu menyiapkan model `.onnx` atau `.tflite` secara terpisah
+
+### 4. Jalankan di Termux
+
+Contoh dengan ONNX:
+
+```bash
+python human.py --source termux-photo --backend onnx --model yolov8n.onnx --no-gui
+```
+
+Contoh dengan TFLite:
+
+```bash
+python human.py --source termux-photo --backend tflite --model yolov8n.tflite --no-gui
+```
+
+---
+
+## Cara Menjalankan Aplikasi
+
+Bagian ini menjelaskan perintah yang paling sering dipakai.
+
+### 1. Jalankan Normal
 
 ```bash
 python human.py
 ```
 
-### Pilih Kamera Tertentu
+Fungsi:
+
+- menjalankan aplikasi dengan pengaturan default
+- memakai kamera default
+- memakai model default `yolov8n.pt`
+
+### 2. Pilih Kamera Tertentu
 
 ```bash
 python human.py --camera 0
 ```
 
-Jika kamera default tidak terbaca, coba:
+Kalau kamera default tidak terbaca, coba:
 
 ```bash
 python human.py --camera 1
 ```
 
-### Jalankan Tanpa Tampilan GUI
+Gunakan ini jika:
 
-Mode ini cocok untuk server atau Termux:
+- laptop punya lebih dari satu kamera
+- webcam eksternal tidak muncul di `camera 0`
+
+### 3. Jalankan Tanpa GUI
 
 ```bash
 python human.py --no-gui
 ```
 
-### Simpan Video Hasil Deteksi
+Cocok untuk:
+
+- server
+- VPS
+- Termux
+- monitoring lewat terminal
+
+### 4. Simpan Video Hasil Deteksi
 
 ```bash
 python human.py --save output.mp4
 ```
 
-### Gunakan Backend Ultralytics
+Hasil anotasi akan disimpan ke file video.
+
+### 5. Jalankan dengan Backend Ultralytics
 
 ```bash
 python human.py --backend ultralytics --model yolov8n.pt
 ```
 
-### Gunakan Backend ONNX
+Ini adalah mode paling mudah untuk PC.
+
+### 6. Jalankan dengan Backend ONNX
 
 ```bash
 python human.py --backend onnx --model yolov8n.onnx
 ```
 
-### Gunakan Backend TFLite
+### 7. Jalankan dengan Backend TFLite
 
 ```bash
 python human.py --backend tflite --model yolov8n.tflite
 ```
+
+---
+
+## Penjelasan Backend
+
+Supaya lebih mudah dipahami, berikut arti tiap backend:
+
+### `ultralytics`
+
+Cocok untuk:
+
+- PC / laptop
+- pengguna yang ingin setup cepat
+
+Kelebihan:
+
+- paling mudah dipakai
+- cocok dengan `yolov8n.pt`
+- pengalaman paling nyaman di PC
+
+### `onnx`
+
+Cocok untuk:
+
+- perangkat ringan
+- Termux
+- deployment yang lebih fleksibel
+
+Kelebihan:
+
+- lebih ringan di banyak perangkat
+- cocok untuk mode headless
+
+### `tflite`
+
+Cocok untuk:
+
+- perangkat yang butuh inferensi ringan
+- Android / edge device
+
+Kelebihan:
+
+- ringan
+- cocok untuk deployment mobile tertentu
+
+Jika bingung memilih:
+
+- pakai `ultralytics` untuk PC
+- pakai `onnx` untuk Termux
 
 ---
 
@@ -189,6 +397,9 @@ Berikut opsi yang paling sering dipakai:
 | `--print-every` | Interval log ke terminal |
 | `--movement-px` | Ambang pixel untuk status bergerak |
 | `--movement-cooldown` | Jeda minimum event gerak |
+| `--track-iou` | Ambang IoU tracking untuk backend non-ultralytics |
+| `--track-max-age` | Batas usia track sebelum dihapus |
+| `--termux-interval` | Jeda antar foto di mode Termux |
 | `--save` | Simpan video anotasi |
 
 Untuk melihat semua opsi:
@@ -203,23 +414,26 @@ python human.py --help
 
 Saat aplikasi berjalan, tampilan live akan menunjukkan:
 
-- jumlah orang yang sedang terlihat
-- total orang unik terdeteksi selama sesi
-- puncak jumlah orang
+- jumlah orang yang sedang terlihat saat ini
+- total orang unik yang terdeteksi selama aplikasi berjalan
+- puncak jumlah orang dalam satu sesi
 - FPS realtime
 - uptime monitoring
 - daftar orang aktif
 - status tiap orang
 
-Contoh status:
+Arti status:
 
-- `Dipantau` = terdeteksi stabil
-- `Aktif` = pernah bergerak dalam sesi
-- `Bergerak` = sedang terdeteksi berpindah posisi
+- `Dipantau`
+  - orang terdeteksi dan sedang dipantau
+- `Aktif`
+  - orang pernah bergerak dalam sesi berjalan
+- `Bergerak`
+  - orang sedang terdeteksi berpindah posisi
 
 ---
 
-## Output Terminal
+## Contoh Output Terminal
 
 Contoh log terminal:
 
@@ -229,7 +443,22 @@ terlihat_sekarang=2 orang | total_terdeteksi=6 orang | puncak=3 orang | fps=24.8
  - Orang #2 | akurasi=0.88 | status=Bergerak | pantau=00:09
 ```
 
-Log ini berguna untuk:
+Penjelasan:
+
+- `terlihat_sekarang`
+  - jumlah orang yang sedang ada di frame sekarang
+- `total_terdeteksi`
+  - jumlah orang unik selama sesi aplikasi
+- `puncak`
+  - jumlah orang terbanyak yang pernah terlihat bersamaan
+- `fps`
+  - kecepatan pemrosesan realtime
+- `uptime`
+  - lamanya aplikasi berjalan
+- `orang_baru`
+  - jumlah penambahan orang unik sejak report terakhir
+
+Log ini cocok untuk:
 
 - monitoring tanpa GUI
 - debugging
@@ -237,40 +466,25 @@ Log ini berguna untuk:
 
 ---
 
-## Menjalankan di Termux
+## Command Paling Singkat
 
-Project ini juga mendukung mode Termux dengan sumber kamera `termux-camera-photo`.
-
-### Install dasar di Termux
+Project ini sudah menyediakan launcher singkat:
 
 ```bash
-pkg update
-pkg install python termux-api
-pip install numpy pillow onnxruntime
+python human.py
 ```
 
-### Jalankan mode Termux
+Artinya kamu tidak perlu mengetik file utama yang lebih panjang:
 
 ```bash
-python human.py --source termux-photo --backend onnx --model yolov8n.onnx --no-gui
+python human_detect_cli.py
 ```
 
-Catatan:
+Jika tujuanmu hanya ingin menjalankan aplikasi secepat mungkin, cukup pakai:
 
-- mode Termux lebih cocok pakai `onnx` atau `tflite`
-- backend `ultralytics` biasanya lebih nyaman dipakai di PC/laptop
-
----
-
-## Rekomendasi Penggunaan
-
-Untuk hasil terbaik:
-
-- gunakan ruangan dengan pencahayaan cukup
-- posisikan kamera stabil
-- gunakan model yang sesuai perangkat
-- untuk PC, backend `ultralytics` adalah pilihan termudah
-- untuk perangkat ringan, gunakan `onnx` atau `tflite`
+```bash
+python human.py
+```
 
 ---
 
@@ -284,12 +498,31 @@ Coba ganti index kamera:
 python human.py --camera 1
 ```
 
+Kalau masih belum terbuka:
+
+- pastikan kamera tidak dipakai aplikasi lain
+- pastikan webcam terdeteksi sistem operasi
+
 ### Modul belum terinstall
 
-Install ulang dependensi:
+Install ulang dependensi sesuai backend yang kamu pilih.
+
+Untuk PC dengan `ultralytics`:
 
 ```bash
 pip install numpy pillow opencv-python ultralytics lap
+```
+
+Untuk ONNX:
+
+```bash
+pip install numpy pillow opencv-python onnxruntime
+```
+
+Untuk TFLite:
+
+```bash
+pip install numpy pillow opencv-python tflite-runtime
 ```
 
 ### Ingin lihat semua opsi
@@ -298,27 +531,47 @@ pip install numpy pillow opencv-python ultralytics lap
 python human.py --help
 ```
 
-### Ingin jalankan paling cepat
+### Di Termux tidak bisa pakai kamera OpenCV
+
+Gunakan:
 
 ```bash
-python human.py
+--source termux-photo
 ```
+
+Contoh:
+
+```bash
+python human.py --source termux-photo --backend onnx --model yolov8n.onnx --no-gui
+```
+
+### Tidak punya model ONNX atau TFLite
+
+Gunakan PC terlebih dahulu dengan backend `ultralytics` dan file:
+
+```text
+yolov8n.pt
+```
+
+Atau siapkan model:
+
+- `yolov8n.onnx`
+- `yolov8n.tflite`
+
+sesuai backend yang ingin dipakai.
 
 ---
 
-## Command Singkat
+## Rekomendasi Penggunaan
 
-Project ini sudah menyediakan launcher singkat:
+Untuk hasil terbaik:
 
-```bash
-python human.py
-```
-
-Jadi kamu tidak perlu lagi mengetik:
-
-```bash
-python human_detect_cli.py
-```
+- gunakan pencahayaan ruangan yang cukup
+- pastikan kamera stabil
+- gunakan backend yang sesuai perangkat
+- di PC, gunakan `ultralytics`
+- di Termux, gunakan `onnx`
+- gunakan `--no-gui` jika perangkat terbatas
 
 ---
 
@@ -341,4 +594,4 @@ python human_detect_cli.py
 
 ## Lisensi
 
-Project ini menggunakan lisensi sesuai pengaturan repository GitHub kamu.
+Project ini mengikuti lisensi yang digunakan pada repository GitHub ini.
