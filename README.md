@@ -151,12 +151,38 @@ Disarankan:
 
 - Python `3.10` atau lebih baru
 
-### 3. Install Dependensi
+### 3. (Disarankan) Buat Virtual Environment
+
+Tujuan virtual environment: supaya instalasi dependensi rapi dan tidak bentrok dengan project lain.
+
+#### Windows
+
+```bash
+python -m venv .venv
+.\.venv\Scripts\activate
+python -m pip install --upgrade pip
+```
+
+#### Linux / macOS
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+```
+
+### 4. Install Dependensi (PC)
+
+Catatan penting:
+
+- Untuk penggunaan kamera di PC, `opencv-python` wajib (karena source default adalah `opencv`).
+- Untuk backend `ultralytics`, package `lap` dibutuhkan untuk tracking agar stabil.
+- Gunakan `python -m pip ...` agar menghindari salah Python/pip (terutama di Windows).
 
 #### Opsi termudah untuk PC: backend Ultralytics
 
 ```bash
-pip install numpy pillow opencv-python ultralytics lap
+python -m pip install numpy pillow opencv-python ultralytics lap
 ```
 
 Ini adalah pilihan terbaik jika:
@@ -168,16 +194,24 @@ Ini adalah pilihan terbaik jika:
 #### Jika ingin backend ONNX
 
 ```bash
-pip install numpy pillow opencv-python onnxruntime
+python -m pip install numpy pillow opencv-python onnxruntime
 ```
 
 #### Jika ingin backend TFLite
 
 ```bash
-pip install numpy pillow opencv-python tflite-runtime
+python -m pip install numpy pillow opencv-python tflite-runtime
 ```
 
-### 4. Jalankan Aplikasi
+### 5. Cek Instalasi (Opsional tapi Disarankan)
+
+Pastikan aplikasi bisa membaca opsi CLI:
+
+```bash
+python human.py --help
+```
+
+### 6. Jalankan Aplikasi
 
 Perintah paling singkat:
 
@@ -206,28 +240,72 @@ Di Termux, backend yang paling disarankan adalah:
 
 Backend `ultralytics` lebih cocok untuk PC karena biasanya lebih mudah dan lebih stabil di sana.
 
-### 1. Install Package Dasar
+### 1. Install Termux:API (Wajib untuk Kamera)
+
+Karena Termux tidak memakai `opencv` camera langsung, aplikasi mengambil frame menggunakan:
+
+- `termux-camera-photo`
+
+Yang perlu kamu install:
+
+- aplikasi Android: Termux:API (dari F-Droid / Play Store yang tersedia)
+- package di Termux: `termux-api`
+
+### 2. Install Package Dasar
 
 ```bash
 pkg update
 pkg install python termux-api
 ```
 
-### 2. Install Dependensi Python
+### 3. (Disarankan) Upgrade pip
+
+```bash
+python -m pip install --upgrade pip
+```
+
+### 4. Install Dependensi Python (Termux)
+
+Catatan:
+
+- Di Termux, jalankan aplikasi dengan `--source termux-photo` dan biasanya `--no-gui`.
+- Untuk mode `termux-photo`, kamu tidak wajib install `opencv-python`.
+- `pillow` dipakai untuk baca gambar hasil `termux-camera-photo`.
 
 #### Untuk ONNX
 
 ```bash
-pip install numpy pillow onnxruntime
+python -m pip install numpy pillow onnxruntime
 ```
 
 #### Untuk TFLite
 
 ```bash
-pip install numpy pillow tflite-runtime
+python -m pip install numpy pillow tflite-runtime
 ```
 
-### 3. Siapkan Model
+### 5. Izin Storage (Opsional)
+
+Kalau kamu mau menyimpan file (mis. model atau output), jalankan:
+
+```bash
+termux-setup-storage
+```
+
+### 6. Tes Kamera Termux (Opsional tapi Disarankan)
+
+Tes apakah kamera bisa diakses:
+
+```bash
+termux-camera-photo -c 0 test.jpg
+```
+
+Kalau command ini gagal:
+
+- pastikan Termux:API app terinstall
+- pastikan permission kamera sudah diizinkan untuk Termux
+
+### 7. Siapkan Model
 
 Jika kamu memakai Termux, model yang lebih cocok:
 
@@ -239,7 +317,7 @@ Catatan:
 - file default di repo sekarang adalah `yolov8n.pt`
 - untuk Termux, biasanya kamu perlu menyiapkan model `.onnx` atau `.tflite` secara terpisah
 
-### 4. Jalankan di Termux
+### 8. Jalankan di Termux
 
 Contoh dengan ONNX:
 
